@@ -1,0 +1,7 @@
+# A Docker SLURM Cluster
+
+当前目录执行：
+```
+docker build -t tsjsdbd/slurmd .
+```
+See https://github.com/GRomR1/docker-slurmbase for details and instructions.

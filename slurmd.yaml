@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    description: tsjsdbd
+  name: slurmd
+  namespace: default
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: slurmd
+  serviceName: slurmd-headless
+  template:
+    metadata:
+      labels:
+        app: slurmd
+    spec:
+      containers:
+      - env:
+        - name: SLURM_CLUSTER_NAME
+          value: ddhpc
+        - name: SLURM_CONTROL_MACHINE
+          value: slurmctld
+        - name: SLURM_NODE_NAMES
+          value: slurmd-[0-4]
+        image: tsjsdbd/slurmd:latest # slurmd¾µÏñ ¡¶== ÐÞ¸Ä
+        imagePullPolicy: Always
+        name: container-0
+        securityContext:
+          privileged: true
+      dnsConfig:
+        searches:
+        - slurmd-headless.default.svc.cluster.local # Á¬slurmdµÄsvc
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+  updateStrategy:
+    type: RollingUpdate

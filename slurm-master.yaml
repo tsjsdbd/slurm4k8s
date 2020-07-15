@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    description: tsjsdbd
+  name: slurm-master
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slurm-master
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: slurm-master
+    spec:
+      containers:
+      - env:
+        - name: SLURM_CLUSTER_NAME
+          value: ddhpc
+        - name: SLURM_CONTROL_MACHINE
+          value: slurmctld
+        - name: SLURM_NODE_NAMES
+          value: slurmd-[0-4] #worker节点
+        image: tsjsdbd/slurmctld:latest #镜像地址 《== 修改
+        imagePullPolicy: Always
+        name: container-0
+      dnsConfig:
+        searches:
+        - slurmd-headless.default.svc.cluster.local # 连slurmd的svc
+      dnsPolicy: ClusterFirst
+      hostname: slurmctld
+      restartPolicy: Always

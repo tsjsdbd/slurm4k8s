@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  slurmctld:
+    container_name: slurmctld
+    environment:
+      SLURM_CLUSTER_NAME: ddhpc
+      SLURM_CONTROL_MACHINE: slurmctld
+      SLURM_NODE_NAMES: slurmd
+      INFLUXDB_HOST: influxdb
+      INFLUXDB_DATABASE_NAME: docker_slurm
+    tty: true
+    hostname: slurmctld
+    networks:
+      default:
+        aliases:
+          - slurmctld
+    image: gromr1/slurmctld
+    stdin_open: true
+  slurmd:
+    container_name: slurmd
+    environment:
+      SLURM_CONTROL_MACHINE: slurmctld
+      SLURM_CLUSTER_NAME: ddhpc
+      SLURM_NODE_NAMES: slurmd
+      INFLUXDB_HOST: influxdb
+      INFLUXDB_DATABASE_NAME: docker_slurm
+    tty: true
+    hostname: slurmd
+    networks:
+      default:
+        aliases:
+          - slurmd
+    image: gromr1/slurmd
+    depends_on:
+      - slurmctld
+    stdin_open: true
