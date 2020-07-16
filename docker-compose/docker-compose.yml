@@ -1,0 +1,33 @@
+version: '2.2'
+
+services:
+  slurmctld:
+    environment:
+      SLURM_CLUSTER_NAME: ddhpc
+      SLURM_CONTROL_MACHINE: slurmctld
+      SLURM_NODE_NAMES: slurmd-[0-4]
+    tty: true
+    hostname: slurmctld
+    image: tsjsdbd/slurmctld:latest
+    stdin_open: true
+  slurmd-0:
+    environment:
+      SLURM_CONTROL_MACHINE: slurmctld
+      SLURM_CLUSTER_NAME: ddhpc
+      SLURM_NODE_NAMES: slurmd-[0-4]
+    tty: true
+    hostname: slurmd-0
+    image: tsjsdbd/slurmd
+    stdin_open: true
+    privileged: true
+  slurmd-1:
+    environment:
+      SLURM_CONTROL_MACHINE: slurmctld
+      SLURM_CLUSTER_NAME: ddhpc
+      SLURM_NODE_NAMES: slurmd-[0-4]
+    tty: true
+    hostname: slurmd-1
+    image: tsjsdbd/slurmd
+    stdin_open: true
+    privileged: true
+
